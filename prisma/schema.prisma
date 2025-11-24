@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+  
+///directUrl = env("DIRECT_URL")
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Pokedex {
+  NUMERO                  Int      @id
+  NOM                     String?
+  TYPE_1                  String?
+  TYPE_2                  String?
+  POINTS_DE_VIE           Int?
+  NIVEAU_ATTAQUE          Int?
+  NIVEAU_DEFENSE          Int?
+  NIVEAU_ATTAQUE_SPECIALE Int?
+  NIVEAU_DEFENSE_SPECIALE Int?
+  VITESSE                 Int?
+  GENERATION              Int?
+  LEGENDAIRE              Boolean?
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  date        DateTime
+  status      String   @default("En cours")
+  isPublic    Boolean  @default(false)
+
+  ownerId     String?
+  owner       User?    @relation(fields: [ownerId], references: [id])
+
+  createdAt   DateTime @default(now())
+}
+model User {
+  id    String @id
+  tasks Task[]
+}
+
