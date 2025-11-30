@@ -23,13 +23,13 @@ import {
 } from "@/src/components/ui/sidebar"
 import { ThemeKey } from "../lib/theme"
 
+type AppSidebarProps = {
+  userEmail: string;
+} & React.ComponentProps<typeof Sidebar>;
+
 // This is sample data.
 const data_user = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+  
   teams: [
     {
       name: "Dusty grass",
@@ -101,7 +101,7 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ userEmail, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -112,7 +112,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data_user.user} />
+        <NavUser user={{userName: "Salut✨", email: userEmail, avatar: "/avatars/shadcn.jpg"}} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

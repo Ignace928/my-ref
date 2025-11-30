@@ -1,12 +1,23 @@
+import { Task } from '@prisma/client';
 import {z} from 'zod'
 
-export const TaskSchema = z.object({
-    id: z.string(),
-    title: z.string().min(1),
-    date: z.coerce.date(),
-    status: z.string().default("En cours"),
-    isPublic: z.boolean().optional().default(false),
-    ownerId: z.string().optional,
-    description: z.string().nullable(),
-})
-export type TaskType = z.infer<typeof TaskSchema>;
+
+export const TaskSchemaBase = z.object({
+  title: z.string().min(1),
+  description: z.string().nullable().optional(),
+  date: z.coerce.date(),
+  status: z.string().default("En cours"),
+  isPublic: z.boolean().optional(),
+  //ownerId: z.string(),
+});
+
+
+export const TaskCreateSchema = TaskSchemaBase;
+
+export const TaskUpdateSchema = TaskSchemaBase.partial();
+
+export type TaskType = Task // <----- Prisma est la source de vérité pour les types de tache
+
+export type TaskRow = Pick<TaskType, 'id' | 'title' | 'description' | 'date' | 'status' | 'isPublic' | "ownerId">;
+export type TaskFormInput = z.infer<typeof TaskSchemaBase>;
+

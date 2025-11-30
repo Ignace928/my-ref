@@ -2,15 +2,8 @@
 
 import { ReactNode } from "react";
 
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@radix-ui/react-dialog";
 import { Button } from "../ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 
 type modalsProps = {
@@ -40,10 +33,8 @@ export function ModularModal({ open, onOpenChange, title, description, triggerLa
         }
 
         <DialogContent className="sm:max-w-[425px]">
-          <section>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
-          </section>
 
           <form onSubmit={(e) => { e.preventDefault(); activate(); }}>
           <div className="grid gap-4">

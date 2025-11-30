@@ -6,7 +6,7 @@ import { SidebarTrigger } from "../ui/sidebar";
 import ModeRoundedSwitcher from "../Theme/modeChooseRound";
 export function HeaderSidebar({ children, title }:{children?:React.ReactNode, title:string}){
     return(
-        <header className="flex h-16 shrink-0 items-center gap-2 px-4">
+        <header className="flex h-16 shrink-0 items-center backdrop-blur-2xl mb-2 gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
           <Separator
             orientation="vertical"

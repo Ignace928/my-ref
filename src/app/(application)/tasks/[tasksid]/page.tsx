@@ -23,8 +23,10 @@ export default async function Page(props: {
     const data = await prisma.task.findUnique({
         where:{
             id:parametre.tasksid,
-            ownerId: user.id,
-            isPublic:true
+            OR:[
+            {ownerId: user.id},
+            {isPublic:true}
+            ],
         }
     })
     if(!data) return redirect("/tasks")

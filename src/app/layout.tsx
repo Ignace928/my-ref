@@ -1,4 +1,4 @@
-
+import "@/src/lib/fix-radix-ssr";
 import { QueryProvider } from "../components/queryProvider";
 import { ReactNode } from "react";
 

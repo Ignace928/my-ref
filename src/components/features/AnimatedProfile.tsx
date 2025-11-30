@@ -2,14 +2,11 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Card } from "@/src/components/ui/card";
-import Image from "next/image";
 import TypingNoStep from "@/src/components/features/Typing";
 
 export default function AnimatedProfile() {
   const { scrollY } = useScroll();
 
-  const translateY = useTransform(scrollY, [0, 300], [4, -50]);
-  const translateYText = useTransform(scrollY, [0, 300], [0, 50]);
   const opacities = useTransform(scrollY, [0, 300], [1, 0]);
   const scaleZoom = useTransform(scrollY, [0, 300], [1, 0.7]);
 

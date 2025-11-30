@@ -6,7 +6,7 @@ interface userStore {
   resetUser: (item: string) => void;
 }
 
-export const useUserStore = create<userStore>((set, get) => ({
+export const useUserStore = create<userStore>((set) => ({
     CurrentUserId:"",
     setUser: (u)=>{
       set({CurrentUserId:u})

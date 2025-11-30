@@ -1,11 +1,8 @@
-// utils/supabase/client.ts
-// import { createBrowserClient } from '@supabase/ssr'
+//dans le 🎁owner_repository.ts, Ce client est utilisé pour le login. route qui doit ètre publique
 
-// export const createClient = () => createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+import { createBrowserClient } from "@supabase/ssr";
 
-import { createClient } from "@supabase/supabase-js";
-
-export const supabaseCli = createClient(
+export const supabaseCli = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
