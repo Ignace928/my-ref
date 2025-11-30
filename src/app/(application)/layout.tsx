@@ -7,13 +7,11 @@ import {
   SidebarProvider,
 } from "@/src/components/ui/sidebar";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/src/utils/supabase/getCurrentUser";
 import { Toaster } from "@/src/components/ui/sonner";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { getSupabaseUser } from "@/src/utils/supabase/getCurrentUser";
 
 export default async function PublicLayout({ children }: { children: ReactNode }) {
-  const user = await getCurrentUser()
-  console.log("Hello from the layout",user)
+  const user = await getSupabaseUser()
   if (!user) return redirect("/login")
   return user && (
     <SidebarProvider>
