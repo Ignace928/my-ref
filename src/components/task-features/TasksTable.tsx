@@ -13,9 +13,15 @@ import { useTaskVm } from "./useTasksVm";
 import { TaskType } from "@/src/lib/Model/Task";
 import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { useState } from "react";
-import { TaskForm } from "./TaskForms";
+import { useMemo, useState } from "react";
 import { Input } from "../ui/input";
+import dynamic from "next/dynamic";
+
+const TaskForm = dynamic(
+  () => import("./TaskForms").then(mod => mod.TaskForm),
+  { ssr: false }
+);
+
 
 
 export const columns: ColumnDef<TaskType>[]= [
@@ -74,16 +80,17 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
     // ✅ on passe le userId injecté par le serveur
   const { data: liveData, isLoading, error } = useTaskVm(userId);
 
-    const table = useReactTable({
-        data : liveData ?? initialData,
-        columns,
-        state: {
-            globalFilter,
-        },
-        onGlobalFilterChange: setGlobalFilter,
-        getCoreRowModel: getCoreRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-    })
+    const table = useReactTable(
+        useMemo(() => ({
+            data: liveData ?? initialData,
+            columns,
+            state: { globalFilter },
+            onGlobalFilterChange: setGlobalFilter,
+            getCoreRowModel: getCoreRowModel(),
+            getFilteredRowModel: getFilteredRowModel(),
+        }), [liveData, initialData, globalFilter])
+    );
+
 
     if(isLoading) return(<p>Chargement...</p>)
     if(error) return <p className="p-4 text-red-500">Erreur de chargement</p>
@@ -113,8 +120,10 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
         </div>
     ):(
         <div className="">
-            <div className="flex items-center gap-3 sticky top-15 p-2 backdrop-blur-2xl mb-2 z-2">
-                <Button onClick={() => setNewTask(true)} className="rounded-full w-15 h-15 font-bold cursor-pointer"><Plus className="w-50 h-50"/></Button>
+            <div className="sticky top-16 z-9 bg-background border-b p-2 flex items-center gap-3">
+                <Button onClick={() => setNewTask(true)} className="rounded-full w-10 h-10 font-bold">
+                    <Plus className="w-5 h-5" />
+                </Button>
                 <Input
                     type="text"
                     value={globalFilter}

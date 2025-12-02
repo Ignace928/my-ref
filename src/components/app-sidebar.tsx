@@ -112,7 +112,7 @@ export function AppSidebar({ userEmail, ...props }: AppSidebarProps) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={{userName: "Salut✨", email: userEmail, avatar: "/avatars/shadcn.jpg"}} />
+        <NavUser user={{userName: "Salut✨", email: userEmail, avatar: "https://vqtoojvjnpjulqlrtlgd.supabase.co/storage/v1/object/public/me/profile/ssdfh65984324sqsdfizdopi9556.jpg"}} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

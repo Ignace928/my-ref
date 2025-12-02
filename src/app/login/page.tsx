@@ -1,6 +1,6 @@
 import { LoginForm } from "@/src/components/login-features/loginForm"
 import { SignupForm } from "@/src/components/login-features/signUpForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card"
+import { CardContent } from "@/src/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/src/components/ui/tabs";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Toaster } from "sonner";

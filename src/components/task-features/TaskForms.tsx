@@ -95,7 +95,7 @@ export function TaskForm({currentUser, task, onClose}:TaskFormProps){
 
                 </FieldGroup>
                 <FieldSeparator/>
-                <FieldGroup className="flex flex-row">
+                <FieldGroup className="flex">
                     <Controller
                         control={control}          // le contrôle RHF (useForm)
                         name="date"                // le nom du champ
