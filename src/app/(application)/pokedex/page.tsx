@@ -1,23 +1,13 @@
-import { HeaderSidebar } from "@/src/components/Layout/HeaderS";
-import { ScrollArea } from "@/src/components/ui/scroll-area";
-import React from "react";
+import { getCurrentUser } from "@/src/utils/supabase/getCurrentUser";
+import { redirect } from "next/navigation";
+import { PokedexWrapper } from "@/src/components/pokedex-features/PokedexWrapper";
 
-export default function PagePkmn(){
+export default async function PagePkmn(){
+    const user = await getCurrentUser();
+    if (!user) return redirect("/login");
     return(
-        
-    <ScrollArea className="w-full h-screen">
-        <div className="sticky top-0">
-            <HeaderSidebar title="Pokedex"></HeaderSidebar>
+        <div>
+            <PokedexWrapper/> 
         </div>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div className="bg-muted/50 aspect-video rounded-xl" />
-                <div className="bg-muted/50 aspect-video rounded-xl" />
-                <div className="bg-muted/50 aspect-video rounded-xl" />
-            </div>
-            <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
-        </div>
-    </ScrollArea>
-            
     )
 }

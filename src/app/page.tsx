@@ -4,6 +4,9 @@ import TypingStep from "@/src/components/features/TypingStep";
 import AnimatedProfile from "../components/features/AnimatedProfile";
 import SectionProfile from "../components/features/SectionProfile";
 import { ScrollArea } from "../components/ui/scroll-area";
+import TypingNoStep from "../components/features/Typing";
+import Link from "next/link";
+import { buttonVariants } from "../components/ui/button";
 
 export default function MyHome() {
   return (
@@ -17,18 +20,30 @@ export default function MyHome() {
           <HeaderBar />
         </div>
 
-        {/* Section TypingStep */}
-        <section className="flex items-center justify-center h-200">
-          <TypingStep 
-            text={["J'❤ React", "J'🧡 Next", "J'💚 JavaScript", "J'💙 Python"]} 
-            speed={90} 
-            pause={1000} 
-            startAt={5000}
-          />
-        </section>
+        {/* Lien sticky en dessous du header */}
+        <div className="sticky top-12 z-20 flex justify-center py-2 bg-background">
+          <Link
+            href="/tasks"
+            className={`${buttonVariants({ variant: "outline" })} w-auto`}
+          >
+            <TypingNoStep message="Made with " speed={100} startAt={0} />
+            <TypingStep
+              text={["❤ TypeScript", "🧡 Next", "💚 Supabase", "💙 Prisma"]}
+              speed={90}
+              pause={1000}
+              startAt={3000}
+            />
+          </Link>
+        </div>
+
+
+
+          
 
         {/* Section texte important */}
-        <SectionProfile/>
+        <div className="h-100">
+          <SectionProfile/>
+        </div>
       </div>
     </ScrollArea>
   );

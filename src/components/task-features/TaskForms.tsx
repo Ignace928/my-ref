@@ -13,6 +13,8 @@ import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 
 
 type TaskFormProps = {
@@ -24,7 +26,7 @@ export function TaskForm({currentUser, task, onClose}:TaskFormProps){
 
     const { createTask, updateTask, deleteTask } = useTaskVm(currentUser)
     const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false); // pour modal
-
+    
 
     const { register, handleSubmit, control, formState:{errors} } = useForm({
         resolver: zodResolver(task ? TaskUpdateSchema : TaskCreateSchema),
@@ -95,28 +97,54 @@ export function TaskForm({currentUser, task, onClose}:TaskFormProps){
 
                 </FieldGroup>
                 <FieldSeparator/>
-                <FieldGroup className="flex">
-                    <Controller
-                        control={control}          // le contrôle RHF (useForm)
-                        name="date"                // le nom du champ
-                        render={({ field }) => (  // RHF te fournit un objet field
+                <FieldGroup className="flex flex-row gap-4 items-end">
+                    {/* Date */}
+                    <Field className="flex-1">
+                        <FieldLabel htmlFor="date">Date</FieldLabel>
+                        <Controller
+                        control={control}
+                        name="date"
+                        render={({ field }) => (
                             <DatePicker
-                            value={field.value as Date | undefined} // 👈 on dit à TS que c’est une Date
-                            onChange={field.onChange} // ↩ RHF récupère la nouvelle valeur
+                            value={field.value as Date | undefined}
+                            onChange={field.onChange}
                             placeholder="Choisir une date"
                             />
-                    )}
+                        )}
                         />
+                        {errors.date && <p className="text-red-500">{errors.date.message}</p>}
+                        <FieldDescription>Deadline de la tâche</FieldDescription>
+                    </Field>
 
-
-
-                    <Field className="flex flex-row">
-                        <FieldLabel htmlFor="visible">Tache partagé</FieldLabel>
-                        <Input id="visible" type="checkbox" {...register('isPublic')} />
-                        {errors.isPublic && <p className="text-red-500">{errors.isPublic.message}</p>}
-                        <FieldDescription>Visibilité</FieldDescription>
+                    {/* Visibilité */}
+                    <Field>
+                            <Controller
+                                control={control}
+                                name="isPublic"
+                                render={({field}) => (
+                                    <Label className="hover:bg-muted flex items-start gap-3 rounded-lg border p-3 has-aria-checked:border-primary ">
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={(checked) => {
+                                            field.onChange(checked)
+                                        }} // ✅ update RHF
+                                        className="data-[state=checked]:border-primary data-[state=checked]:bg-primary  "
+                                    />
+                                        <div className="grid gap-1.5 font-normal">
+                                        <p className="text-sm leading-none font-medium">
+                                            Visibilité activé
+                                        </p>
+                                        <p className="text-muted-foreground text-sm">
+                                            Cette action rend votre tache publique
+                                        </p>
+                                        </div>
+                                    </Label>
+                                )}
+                            />
+                            {errors.isPublic && <p className="text-red-500">{errors.isPublic.message}</p>}
                     </Field>
                 </FieldGroup>
+
             </FieldSet>
 
             <div className="flex flex-row gap-4">

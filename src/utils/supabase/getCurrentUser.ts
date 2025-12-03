@@ -3,7 +3,7 @@
 import prisma from "@/src/lib/prisma";
 import { createClient } from "./server";
 
-// Pour l'utilisation côté server avec Prisma
+//Pour l'utilisation côté server avec Prisma
 export async function getCurrentUser() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -22,7 +22,8 @@ export async function getCurrentUser() {
   };
 }
 
-// Pour l'utilisation côté layout / RSC, sans Prisma
+//Pour l'utilisation côté layout / RSC, sans Prisma
+
 export async function getSupabaseUser() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -37,9 +38,19 @@ export async function getSupabaseUser() {
 
 
 
+// export async function getSupabaseUser() {
+//   const dbUser = await prisma.user.findUnique({
+//     where:{id:"user2"}
+//   })
+//   if(!dbUser) return {id:"null", email:"no"}
+//   return {
+//     id : dbUser.id,
+//     email: dbUser.id,
+//   };
+// }
 // export async function getCurrentUser() {
 //   const dbUser = await prisma.user.findUnique({
-//     where:{id:"user3"}
+//     where:{id:"user2"}
 //   })
 //   if(!dbUser) return {id:"null", email:"no"}
 //   return {

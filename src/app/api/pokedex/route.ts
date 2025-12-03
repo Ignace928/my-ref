@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/src/lib/prisma";
-import { PokedexSchema } from "@/src/lib/pokemon";
+import { PokedexSchema } from "@/src/lib/Model/pokemon";
 import { createClient } from "@/src/utils/supabase/server";
 
 export async function GET() {

@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import TypingNoStep from "@/src/components/features/Typing";
-
 export default function SectionProfile() {
 //   const { scrollY } = useScroll();
 
@@ -12,16 +10,14 @@ export default function SectionProfile() {
 //   const scaleZoom = useTransform(scrollY, [0, 300], [1, 0.7]);
 
   return (
-    <div>
         <motion.section 
-            className="font-bold text-2xl h-100"
+            className="font-bold text-2xl h-200"
             initial={{opacity:0 , y:40}}
             whileInView={{opacity:1, y:0}}
             viewport={{once: false, amount:0.6}}
             transition={{duration: 1}}
         >
-            <TypingNoStep message="RAHARIMALALA Santatry Ny Aina Edwardo Ignace" speed={100} startAt={0}/>            
+            RAHARIMALALA SANTATRY NY AINA       
         </motion.section>
-    </div>
   );
 }

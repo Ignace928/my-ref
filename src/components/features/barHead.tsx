@@ -1,9 +1,8 @@
 "use client";
-
+    
 import ModeSwitcher from "../Theme/modeChoose";
 import ThemeSwitcher from "../Theme/themeChoose";
 import { Card } from "../ui/card";
-
 
 export const HeaderBar = () => {
     return(

@@ -100,16 +100,7 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
             <div className="flex flex-row sticky top-15 p-2 backdrop-blur-2xl">
                 <Button variant={'secondary'} onClick={() => setTaskViwer(null)} className="rounded-full w-10 h-10 font-bold cursor-pointer transform rotate-135"><Plus className="w-50 h-50"/></Button>
             </div>
-                
-            <Card>
-                <CardTitle className="items-center">
-                </CardTitle>
-                <CardContent>
-                    <TaskForm currentUser={userId} task={taskViwer} onClose={()=>setTaskViwer(null)} />
-                </CardContent>
-                <CardFooter>
-                </CardFooter>
-            </Card>
+            <TaskForm currentUser={userId} task={taskViwer} onClose={()=>setTaskViwer(null)} />
         </div>
     ): newTask ? (
         <div>

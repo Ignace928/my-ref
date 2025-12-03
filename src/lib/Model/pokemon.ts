@@ -1,3 +1,4 @@
+import { Pokedex } from "@prisma/client";
 import { z } from "zod";
 
 // Définir le schéma
@@ -15,6 +16,8 @@ const PokemonSchema = z.object({
     GENERATION: z.number(),
     LEGENDAIRE: z.boolean(),
   })
+
+export type PokemonType = Pokedex
 
 // Pour un tableau
 export const PokedexSchema = z.array(PokemonSchema);
