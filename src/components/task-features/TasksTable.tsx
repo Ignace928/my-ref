@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "../ui/button";
-import { EyeIcon, Plus, VerifiedIcon } from "lucide-react";
+import { EyeIcon, LoaderPinwheel, Plus, VerifiedIcon } from "lucide-react";
 import { useTaskVm } from "./useTasksVm";
 import { TaskType } from "@/src/lib/Model/Task";
 import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
@@ -92,7 +92,12 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
     );
 
 
-    if(isLoading) return(<p>Chargement...</p>)
+    if(isLoading) return(
+            <Card className="items-center text-center">
+                Mise en Cache...
+                <LoaderPinwheel className="animate-spin text-primary"/>
+            </Card>
+        )
     if(error) return <p className="p-4 text-red-500">Erreur de chargement</p>
 
     return taskViwer ? (
@@ -111,7 +116,7 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
         </div>
     ):(
         <div className="">
-            <div className="sticky top-16 z-9 bg-background border-b p-2 flex items-center gap-3">
+            <div className="sticky top-16 z-2 bg-background border-b p-2 flex items-center gap-3">
                 <Button onClick={() => setNewTask(true)} className="rounded-full w-10 h-10 font-bold">
                     <Plus className="w-5 h-5" />
                 </Button>

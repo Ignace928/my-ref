@@ -1,7 +1,6 @@
 
 import { HeaderBar } from "../components/features/barHead";
 import TypingStep from "@/src/components/features/TypingStep";
-import AnimatedProfile from "../components/features/AnimatedProfile";
 import SectionProfile from "../components/features/SectionProfile";
 import { ScrollArea } from "../components/ui/scroll-area";
 import TypingNoStep from "../components/features/Typing";
@@ -10,18 +9,13 @@ import { buttonVariants } from "../components/ui/button";
 
 export default function MyHome() {
   return (
-    <ScrollArea className="w-full h-screen">
-      <div className="flex flex-col gap-4 text-center">
-        
-        {/* Section profil avec animation */}
-          <AnimatedProfile />
-        {/* Header sticky */}
+    <ScrollArea className="w-full h-screen flex flex-col gap-4 text-center">
         <div className="sticky top-0 z-3">
           <HeaderBar />
         </div>
 
         {/* Lien sticky en dessous du header */}
-        <div className="sticky top-12 z-20 flex justify-center py-2 bg-background">
+        <div className="sticky top-12 z-20 flex justify-center py-2 ">
           <Link
             href="/tasks"
             className={`${buttonVariants({ variant: "outline" })} w-auto`}
@@ -41,10 +35,12 @@ export default function MyHome() {
           
 
         {/* Section texte important */}
-        <div className="h-100">
+        <div className="h-200">
           <SectionProfile/>
         </div>
-      </div>
+        <div className="">
+          <SectionProfile/>
+        </div>
     </ScrollArea>
   );
 }

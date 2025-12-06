@@ -95,7 +95,7 @@ const data = {
     },
     {
       name: "Travel",
-      url: "#",
+      url: "/maps",
       icon: Map,
     },
   ],

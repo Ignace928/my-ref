@@ -10,7 +10,6 @@ import { Pokedex } from "./Pokedex";
 
 export function PokedexWrapper() {
   const [data, setData] = useState<PokemonType[] | null>(null);
-
   useEffect(() => {
     async function load() {
       const result = await fetch_pokedex();

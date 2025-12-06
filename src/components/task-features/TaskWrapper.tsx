@@ -7,6 +7,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { TasksTable } from "./TasksTable";
 import { TaskType } from "@/src/lib/Model/Task";
 import { fetch_my_tasks } from "@/src/app/(application)/tasks/action_task";
+import { LoaderPinwheel } from "lucide-react";
 
 export function TaskWrapper({ userId }: { userId: string }) {
   const [data, setData] = useState<TaskType[] | null>(null);
@@ -28,9 +29,8 @@ export function TaskWrapper({ userId }: { userId: string }) {
       <section className="flex-1">
         <div className="p-4 space-y-4">
           {!data ? (
-            <Card>
-              <CardTitle>Chargement...</CardTitle>
-              <CardContent>Veuillez patienter...</CardContent>
+              <Card className="items-center text-center">
+                <LoaderPinwheel className="animate-spin text-primary"/>
             </Card>
           ) : data.length ? (
             <TasksTable initialData={data} userId={userId} />
