@@ -1,7 +1,7 @@
 "use client";
 
 import { PokemonType } from "@/src/lib/Model/pokemon";
-import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { ColumnDef, getCoreRowModel, getFilteredRowModel, useReactTable } from "@tanstack/react-table";
 import { usePokedexVM } from "./usePokedexVM";
 import { useMemo, useState } from "react";
 import { MiniCardPokemon } from "./MiniCardPokemon";
@@ -25,6 +25,8 @@ export const column_Pokedex : ColumnDef<PokemonType>[] = [
 export function Pokedex({ data_pokedex } : {data_pokedex : PokemonType[]}){
     const [filterType1, setFilterType1] = useState<string>("");
     const [filterType2, setFilterType2] = useState<string>("");
+    const [globalFilter, setGlobalFilter] = useState<string>("")
+
     const { data: liveData, isLoading, error } = usePokedexVM()
     const { setPokemon, pokemon } = usePokemonBrowserStore()
 
@@ -56,8 +58,11 @@ export function Pokedex({ data_pokedex } : {data_pokedex : PokemonType[]}){
         useMemo(() => ({
             data : filteredData,
             columns : column_Pokedex,
-            getCoreRowModel : getCoreRowModel()
-        }), [filteredData])
+            state: { globalFilter },
+            onGlobalFilterChange: setGlobalFilter,
+            getCoreRowModel : getCoreRowModel(),
+            getFilteredRowModel: getFilteredRowModel()
+        }), [filteredData, globalFilter])
     )
     if(isLoading) return(
         <Card className="items-center text-center">
@@ -74,8 +79,8 @@ export function Pokedex({ data_pokedex } : {data_pokedex : PokemonType[]}){
                     <Field>
                         <Input
                             type="text"
-                            // value={globalFilter}
-                            // onChange={(e) => setGlobalFilter(e.target.value)}
+                            value={globalFilter}
+                            onChange={(e) => setGlobalFilter(e.target.value)}
                             placeholder="Rechercher une tâche…"
                             className="border p-2 rounded w-64"
                             />
@@ -93,7 +98,7 @@ export function Pokedex({ data_pokedex } : {data_pokedex : PokemonType[]}){
                             <SelectValue placeholder="Tous Type 1" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Tous Type 1</SelectItem>
+                            <SelectItem value="all">Type 1</SelectItem>
                             {uniqueType1.map((t) => (
                             <SelectItem key={t} value={t || ""}>
                                 {t}
@@ -110,7 +115,7 @@ export function Pokedex({ data_pokedex } : {data_pokedex : PokemonType[]}){
                             <SelectValue placeholder="Tous Type 1" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Tous Type 2</SelectItem>
+                            <SelectItem value="all">Type 2</SelectItem>
                             {uniqueType2.map((t) => (
                             <SelectItem key={t} value={t || ""}>
                                 {t}

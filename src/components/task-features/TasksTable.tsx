@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "../ui/button";
-import { EyeIcon, LoaderPinwheel, Plus, VerifiedIcon } from "lucide-react";
+import { CheckSquare2, Eye, EyeIcon, EyeOff, LoaderPinwheel, MoreHorizontal, Pencil, Plus, Trash2, VerifiedIcon } from "lucide-react";
 import { useTaskVm } from "./useTasksVm";
 import { TaskType } from "@/src/lib/Model/Task";
 import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
@@ -16,6 +16,8 @@ import { Badge } from "../ui/badge";
 import { useMemo, useState } from "react";
 import { Input } from "../ui/input";
 import dynamic from "next/dynamic";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { SidebarGroup, SidebarMenuAction } from "../ui/sidebar";
 
 const TaskForm = dynamic(
   () => import("./TaskForms").then(mod => mod.TaskForm),
@@ -26,18 +28,18 @@ const TaskForm = dynamic(
 
 export const columns: ColumnDef<TaskType>[]= [
     {
+        accessorKey:"isPublic",
+        header:"",
+        cell: (info) => (info.getValue() ? (<Eye height={15} width={15}/>):(<EyeOff height={15} width={15}/>))
+    },
+    {
         accessorKey:"title",
         header:"Titre"
     },
     {
         accessorKey:"description",
         header:"Description", 
-        maxSize:16
-    },
-    {
-        accessorKey:"isPublic",
-        header:"Visibilité",
-        cell: (info) => (info.getValue() ? ("Public"):("Privé"))
+        maxSize:10
     },
     {
     accessorKey: "date",
@@ -59,6 +61,46 @@ export const columns: ColumnDef<TaskType>[]= [
         accessorKey:"status", 
         header:"Status"
     },
+    {
+        id:"action",
+        size:12,
+        cell:({row}) => {
+            const task = row.original
+            return(
+                <SidebarGroup className="items-center">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="items-center">
+                            <SidebarMenuAction>
+                                <MoreHorizontal/>
+                            </SidebarMenuAction>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                            className="w-40 rounded-lg"
+                            side="left"
+                            align="start"
+                        >
+                            <DropdownMenuItem>
+                                <Pencil className="text-muted-foreground"/>
+                                {task.title}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Trash2 className="text-muted-foreground"/>
+                                Supprimer
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuItem>
+                                <CheckSquare2 className="text-muted-foreground"/>
+                                Effectué
+                            </DropdownMenuItem>
+
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </SidebarGroup>
+            )
+        }
+    },
+    
+    
     // {
     //     id:"action",
     //     header:"Action",

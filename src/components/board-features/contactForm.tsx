@@ -42,7 +42,7 @@ export function ContactForm() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
             <FieldSet>
-                <FieldGroup className="flex flex-row">
+                <FieldGroup className="flex flex-col md:flex-row">
                     <Field>
                         <Label>Nom</Label>
                         <Input type="text" {...register("nom")} className="mt-2" placeholder="Nico ROBIN" />

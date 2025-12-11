@@ -81,20 +81,10 @@ const data = {
       url: "/tasks",
       icon: ListChecks
     },
-    {
-      title: "My Portfolio",
-      url: "/",
-      icon: BookOpen
-    },
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Travel",
+      name: "Maps",
       url: "/maps",
       icon: Map,
     },
