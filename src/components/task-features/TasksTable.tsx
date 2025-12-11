@@ -215,6 +215,11 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
                             ))
                         ) : (
                         <Card className="h-100 items-center text-center">
+                            <div className="sticky top-16 z-2 bg-background border-b p-2 flex items-center gap-3">
+                                <Button onClick={() => setNewTask(true)} className="rounded-full w-10 h-10 font-bold">
+                                    <Plus className="w-5 h-5" />
+                                </Button>
+                            </div>
                             <CardContent className="w-full">
                                 Aucun tâche trouvée
                             </CardContent>

@@ -35,10 +35,10 @@ export function NavMain({
       <SidebarMenu>
         {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton tooltip={item.title} className={`${pageActive === item.title ? "bg-sidebar-primary text-sidebar-primary-foreground":"" }`}onClick={()=>navigate(item.title, item.url)}>
+                <SidebarMenuButton tooltip={item.title} className={`${pageActive === item.title ? "bg-sidebar-primary text-sidebar-primary-foreground":"" }`} onClick={()=>navigate(item.title, item.url)}>
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
-                    <ChevronRight className="ml-auto" />
+                    <ChevronRight className={`${pageActive === item.title ? "ml-auto transition-all duration-75":"ml-4" }`} />
                 </SidebarMenuButton>
             </SidebarMenuItem>
         ))}

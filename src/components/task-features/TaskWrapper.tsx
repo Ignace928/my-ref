@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardTitle } from "@/src/components/ui/card";
 import { HeaderSidebar } from "../Layout/HeaderS";
-import { ScrollArea } from "../ui/scroll-area";
 import { TasksTable } from "./TasksTable";
 import { TaskType } from "@/src/lib/Model/Task";
 import { fetch_my_tasks } from "@/src/app/(application)/tasks/action_task";

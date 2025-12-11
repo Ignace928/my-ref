@@ -23,7 +23,6 @@ export async function getCurrentUser() {
 }
 
 //Pour l'utilisation côté layout / RSC, sans Prisma
-
 export async function getSupabaseUser() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
