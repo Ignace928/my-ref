@@ -1,0 +1,8 @@
+id,title,description,date,status,isPublic,ownerId,createdAt
+t5,Tache 5,"Nouveau tache ajourd'hui",2025-12-04 21:00:00,En cours,false,user1,2025-11-24 19:36:15.727
+t1,Tache1,Lancer VS Code avec CMD,1970-01-01 00:00:00,En cours,true,user1,2025-11-24 01:58:48.875
+t2,Tache 2,"Lancer l'environnemnent de dev",1970-01-01 00:00:00,En cours,true,user1,2025-11-24 02:00:22.46
+cmild7ane0005kxdcpnn03f9j,qsdq,qsdqsdqsdqsdq,2025-12-04 21:00:00,En cours,false,user1,2025-11-30 06:54:17.258
+cmim3m5eu0005kxf4x6x1zonk,Tache 3,Mon tache,2026-01-15 21:00:00,En cours,false,user3,2025-11-30 19:13:40.325
+t3,Tache 3,"Lancer l'environnemen de dev",2025-12-20 00:00:00,En cours,false,user2,2025-11-24 02:08:12.384
+t4,Tache 4,"J'ai la flème pour decrire cette tâche",2025-12-03 21:00:00,En cours,false,user2,2025-11-24 09:02:58.486
