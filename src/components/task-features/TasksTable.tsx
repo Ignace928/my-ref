@@ -8,16 +8,18 @@ import {
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "../ui/button";
-import { CheckSquare2, Eye, EyeIcon, EyeOff, LoaderPinwheel, MoreHorizontal, Pencil, Plus, Trash2, VerifiedIcon } from "lucide-react";
+import { CheckCircle, Circle, Eye, EyeOff, LoaderPinwheel, LucideCircleX, MoreHorizontal, Plus, VerifiedIcon } from "lucide-react";
 import { useTaskVm } from "./useTasksVm";
 import { TaskType } from "@/src/lib/Model/Task";
-import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { useMemo, useState } from "react";
 import { Input } from "../ui/input";
 import dynamic from "next/dynamic";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { SidebarGroup, SidebarMenuAction } from "../ui/sidebar";
+import { DialogConfirm } from "../features/modal";
+import { toast } from "sonner";
+import TaskManager from "./TaskManager";
+import { MiniConfetti } from "../features/ConfetiButton";
 
 const TaskForm = dynamic(
   () => import("./TaskForms").then(mod => mod.TaskForm),
@@ -26,102 +28,96 @@ const TaskForm = dynamic(
 
 
 
-export const columns: ColumnDef<TaskType>[]= [
-    {
-        accessorKey:"isPublic",
-        header:"",
-        cell: (info) => (info.getValue() ? (<Eye height={15} width={15}/>):(<EyeOff height={15} width={15}/>))
-    },
-    {
-        accessorKey:"title",
-        header:"Titre"
-    },
-    {
-        accessorKey:"description",
-        header:"Description", 
-        maxSize:10
-    },
-    {
-    accessorKey: "date",
-    header: "Date fin",
-    cell: (info) => {
-        const value = info.getValue() as Date | null;
-        if (!value) return "—";
-
-        const d = new Date(value);
-        return d.toLocaleDateString("fr-FR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric"
-        });
-    }
-    },
-
-    {
-        accessorKey:"status", 
-        header:"Status"
-    },
-    {
-        id:"action",
-        size:12,
-        cell:({row}) => {
-            const task = row.original
-            return(
-                <SidebarGroup className="items-center">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger className="items-center">
-                            <SidebarMenuAction>
-                                <MoreHorizontal/>
-                            </SidebarMenuAction>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                            className="w-40 rounded-lg"
-                            side="left"
-                            align="start"
-                        >
-                            <DropdownMenuItem>
-                                <Pencil className="text-muted-foreground"/>
-                                {task.title}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Trash2 className="text-muted-foreground"/>
-                                Supprimer
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator/>
-                            <DropdownMenuItem>
-                                <CheckSquare2 className="text-muted-foreground"/>
-                                Effectué
-                            </DropdownMenuItem>
-
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </SidebarGroup>
-            )
-        }
-    },
-    
-    
-    // {
-    //     id:"action",
-    //     header:"Action",
-    //     cell:({row}) => {
-    //         const task = row.original; // <-- récupération de la ligne
-    //         return(
-    //             <Button onClick={()=>console.log(task)}></Button>
-    //         )
-    //     }
-    // },
-]
-
 export function TasksTable({initialData, userId}:{initialData:TaskType[], userId:string}){
     const [newTask, setNewTask] = useState<boolean>(false)
+    const [taskToDelete, setTaskToDelete] = useState<TaskType | null>(null);
     const [taskViwer, setTaskViwer] = useState<TaskType | null>(null)
     const [globalFilter, setGlobalFilter] = useState("");
-    
-    
-    // ✅ on passe le userId injecté par le serveur
-  const { data: liveData, isLoading, error } = useTaskVm(userId);
+    const [confettiTaskId, setConfettiTaskId] = useState<string | null>(null);
 
+    // ✅ on passe le userId injecté par le serveur
+    const { data: liveData, isLoading, error, updateTask } = useTaskVm(userId);
+    
+    const finishTask = async (data: TaskType, taskId: string) => {
+        await updateTask.mutateAsync({input: data, id: taskId})
+            .then((t) => {
+                toast.success("Tâche effectué", {
+                    description: `Titre: ${t.title}`
+                })
+
+                setConfettiTaskId("activate")
+                setTimeout(() => setConfettiTaskId(null), 10000);
+            }).catch(err => {
+                console.log(err)
+            })
+    }
+
+    // const confettiboom = () => {
+    //     setConfettiTaskId("activate")
+    //     setTimeout(() => setConfettiTaskId(null), 2000);
+    // }
+
+
+    
+    const columns = useMemo<ColumnDef<TaskType>[]>(() => [
+    {
+      accessorKey: "isPublic",
+      header: "",
+      cell: (info) => (info.getValue() ? <Eye height={15} width={15} /> : <EyeOff height={15} width={15} />)
+    },
+    { accessorKey: "title", header: "Titre" },
+    { accessorKey: "description", header: "Description", maxSize: 10 },
+    {
+      accessorKey: "date",
+      header: "Date fin",
+      cell: (info) => {
+        const value = info.getValue() as Date | null;
+        if (!value) return "—";
+        return new Date(value).toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" });
+      }
+    },
+    { 
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => {
+                const deadline = new Date(row.original.date);
+                const now = new Date();
+                const isSuccess = row.original.status !== "En cours"
+                const isExpired = deadline.getTime() < now.getTime()
+
+                return (
+                    <div className="relative flex items-end">
+                        {
+
+                            isSuccess ? (
+                                    <CheckCircle className="text-primary"/>
+                                ) : isExpired ? (
+                                    <LucideCircleX className="text-destructive"/>
+                                ) : (
+                                    <Circle className=""/>
+                                )
+                        }
+                    </div>
+                )
+            }            
+    },
+    {
+      id: "action",
+      cell: ({ row }) => {
+        const task = row.original;
+        return (
+            <TaskManager task={task} let_edit={setTaskViwer} let_delete={setTaskToDelete} endTask={finishTask}>
+                <MoreHorizontal/>
+            </TaskManager>
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  ], [setTaskToDelete]);
+
+
+
+     
     const table = useReactTable(
         useMemo(() => ({
             data: liveData ?? initialData,
@@ -130,7 +126,7 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
             onGlobalFilterChange: setGlobalFilter,
             getCoreRowModel: getCoreRowModel(),
             getFilteredRowModel: getFilteredRowModel(),
-        }), [liveData, initialData, globalFilter])
+        }), [liveData, initialData, globalFilter, columns])
     );
 
 
@@ -158,6 +154,7 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
         </div>
     ):(
         <div className="">
+            <MiniConfetti active={confettiTaskId === "activate"} />
             <div className="sticky top-16 z-2 bg-background border-b p-2 flex items-center gap-3">
                 <Button onClick={() => setNewTask(true)} className="rounded-full w-10 h-10 font-bold">
                     <Plus className="w-5 h-5" />
@@ -170,6 +167,7 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
                     className="border p-2 rounded w-64"
                 />
             </div>
+
             <section  className="hidden sm:flex mx-2">
                 <Table>
                     {/* ---------------- HEADER ---------------- */}
@@ -193,11 +191,7 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
                     <TableBody>
                         {table.getRowModel().rows.length ? (
                             table.getRowModel().rows.map((row) => (
-                            <TableRow className="cursor-pointer" key={row.id} onClick={
-                                ()=>{
-                                    setTaskViwer(row.original)
-                                }
-                            }>
+                            <TableRow className="cursor-pointer" key={row.id} >
                                 {row.getVisibleCells().map((cell) => (
                                 <TableCell key={cell.id}>
                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -211,64 +205,130 @@ export function TasksTable({initialData, userId}:{initialData:TaskType[], userId
                                 colSpan={columns.length}
                                 className="text-center py-4 text-gray-500"
                             >
-                                Aucune donnée trouvée
+                                <div className="sticky top-7/12 z-2 p-2 flex flex-col items-center gap-3">
+                                    Aucune donnée trouvée
+                                    <Button onClick={() => setNewTask(true)} variant="secondary" className="rounded-full w-15 h-15 font-bold border-2 border-dashed border-primary cursor-pointer">
+                                        <Plus className="w-5 h-5" />
+                                    </Button>
+                                    <p>Nouveau täche</p>
+                                </div>
                             </TableCell>
                             </TableRow>
                         )}
                     </TableBody>
                 </Table>
             </section>
-            <section className="sm:hidden grid mx-2 min-[400px]:grid-cols-2 gap-4">
+
+            <section className="sm:hidden grid mx-2 min-[400px]:grid-cols-2 gap-4 mt-4">
                 {
                 table.getRowModel().rows.length ? (
-                            table.getRowModel().rows.map((row) => (
-                            <Card className="
-                                cursor-pointer h-100
-                                shadow-sm
-                                transition-all duration-300 ease-out
-                                rounded-xl
-                                
-                                hover:-translate-y-1
-                                hover:scale-[1.02]
-                                hover:z-0
+                            table.getRowModel().rows.map((row) => {
+                                const deadline = new Date(row.original.date);
+                                const now = new Date();
+                                const isSuccess = row.original.status !== "En cours"
+                                const isExpired = deadline.getTime() < now.getTime()
+                                return(
+                                    <Card className="
+                                        cursor-pointer h-80
+                                        shadow-sm
+                                        transition-all duration-300 ease-out
+                                        rounded-xl
+                                        
+                                        hover:-translate-y-1
+                                        hover:scale-[1.02]
+                                        hover:z-0
 
-                                hover:shadow-[0px_0px_8px_var(--primary)]" 
-                                    key={row.id} onClick={
-                                ()=>{
-                                    setTaskViwer(row.original)
-                                }
-                            }>
-                                {row.original.isPublic ? <EyeIcon className="mx-2"/> :""}
-                                <CardTitle className="text-center">{row.original.title}</CardTitle>
-                                <CardContent className="h-100 ">
-                                    📌{row.original.description}
-                                </CardContent>
-                                <CardFooter className="flex justify-between items-center">
-                                    <p className="text-sm text-muted-foreground">Deadline: {row.original.date.toLocaleDateString()}</p>
-                                    {row.original.status === "En cours" ? (
-                                        <Badge variant='secondary'>Pending</Badge>
-                                    ) : row.original.status === "erreur" ? (
-                                        <Badge variant="destructive">échec</Badge>
-                                    ) : (
-                                        <Badge variant='secondary'><VerifiedIcon className="text-green-500"/></Badge>
-                                    )}
-                                </CardFooter>
-                            </Card>
-                            ))
+                                        hover:shadow-[0px_0px_8px_var(--primary)]" key={row.id}>
+                                        
+                                        <CardHeader className="pb-2">
+                                            <div className="flex items-center justify-between">
+
+                                                
+
+                                                <div className="w-8 flex justify-start">
+                                                    {row.original.isPublic ? (
+                                                    <Eye className="h-5 w-5 text-muted-foreground" />
+                                                    ) : (
+                                                    <EyeOff className="h-5 w-5 text-muted-foreground" />
+                                                    )}
+                                                </div>
+
+                                                <CardTitle className="flex-1 text-center text-base font-semibold truncate px-2">
+                                                    {row.original.title.length > 10 ? row.original.title.slice(0, 10) + "…" : row.original.title}
+                                                </CardTitle>
+
+                                                <div className="w-8 flex justify-end">
+                                                    <TaskManager
+                                                        task={row.original}
+                                                        let_edit={setTaskViwer}
+                                                        let_delete={setTaskToDelete}
+                                                        endTask={finishTask}
+                                                    >
+                                                        <MoreHorizontal className="h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" />
+                                                    </TaskManager>
+                                                </div>
+                                                
+                                            </div>
+                                        </CardHeader>
+
+                                        <CardContent className="flex h-100 flex-col gap-2 text-sm text-muted-foreground">
+                                            <p className="text-center">📌</p>
+                                            <p className="line-clamp-4 text-center">
+                                            {row.original.description || "Aucune description"}
+                                            </p>
+                                        </CardContent>
+
+                                        <CardFooter className="flex justify-between items-center">
+                                            <p className="text-xs text-muted-foreground">
+                                                Deadline: {row.original.date.toLocaleDateString()}
+                                            </p>
+
+                                            {isSuccess ? (
+                                                <Badge variant='secondary'><VerifiedIcon className="text-green-500"/></Badge>
+                                            ) : isExpired ? (
+                                                <Badge variant="destructive">échec</Badge>
+                                            ) : (
+                                                <Badge variant='secondary'>Pending</Badge>
+                                            )}
+                                        </CardFooter>
+                                    </Card>
+                                    
+                                )
+                            })
                         ) : (
-                        <Card className="h-100 items-center text-center">
-                            <div className="sticky top-16 z-2 bg-background border-b p-2 flex items-center gap-3">
-                                <Button onClick={() => setNewTask(true)} className="rounded-full w-10 h-10 font-bold">
-                                    <Plus className="w-5 h-5" />
-                                </Button>
-                            </div>
-                            <CardContent className="w-full">
+                        <Card className="h-80 pt-1/2 items-center text-center text-gray-500">
+                            <CardTitle>
                                 Aucun tâche trouvée
+                            </CardTitle>
+
+                            <CardContent>
+                                <div className=" z-2 p-2 flex flex-col items-center gap-3">
+                                    <Button onClick={() => setNewTask(true)} variant="secondary" className="rounded-full w-15 h-15 font-bold border-2 border-dashed border-primary">
+                                        <Plus className="w-5 h-5" />
+                                    </Button>
+                                    <p>Add</p>
+                                </div>
                             </CardContent>
                         </Card>
                     )
                 }
             </section>
+
+            
+            {
+            //
+            //🧶Modale confirmation de suppression
+            //
+            taskToDelete && (
+                <DialogConfirm
+                    currentUser={userId}
+                    isDeleteOpen={!!taskToDelete}
+                    setIsDeleteOpen={(open) => !open && setTaskToDelete(null)}
+                    onClose={() => setTaskToDelete(null)}
+                    task={taskToDelete}
+                />
+            )}
+            
         </div>
     )
 }

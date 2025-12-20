@@ -24,8 +24,8 @@ type TaskFormProps = {
 }
 export function TaskForm({currentUser, task, onClose}:TaskFormProps){
 
-    const { createTask, updateTask, deleteTask } = useTaskVm(currentUser)
-    const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false); // pour modal
+    const { createTask, updateTask } = useTaskVm(currentUser)
+    //const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false); // pour modal
     
 
     const { register, handleSubmit, control, formState:{errors} } = useForm({
@@ -155,39 +155,7 @@ export function TaskForm({currentUser, task, onClose}:TaskFormProps){
                     >
                     {task ? "Mettre à jour" : "Créer"}
                 </Button>
-                {
-                task && (
-                    <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-                        <DialogTrigger asChild>
-                            <Button variant="destructive" className="rounded-full h-10 w-10 cursor-pointer ml-6">
-                                <Trash2 />
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Confirmer la suppression</DialogTitle>
-                            </DialogHeader>
-                            <div className="py-2">Voulez-vous vraiment supprimer la tâche{" "}
-                                {task.title.length > 10 ? task.title.slice(0, 10) + "…" : task.title} ?
-                            </div>
-                            <DialogFooter>
-                                <Button className="cursor-pointer" variant="outline" onClick={() => setIsDeleteOpen(false)}>Annuler</Button>
-                                <Button className="cursor-pointer" variant="destructive" onClick={async () => {
-                                        try {
-                                            await deleteTask.mutateAsync(task.id)
-                                            setIsDeleteOpen(false)     // ferme la modal
-                                            if (onClose) onClose()     // ferme le form parent (si modal parent)
-                                            toast("Tâche supprimée")
-                                            } catch (err) {
-                                            toast.error("Erreur lors de la suppression")
-                                        }
-                                    }}>Supprimer</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-                )}
-                
-                </div>
+            </div>
             
         </form>
     )

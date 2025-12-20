@@ -1,7 +1,6 @@
 
 import { HeaderBar } from "../components/features/barHead";
 import TypingStep from "@/src/components/features/TypingStep";
-import SectionProfile from "../components/features/SectionProfile";
 import { ScrollArea } from "../components/ui/scroll-area";
 import TypingNoStep from "../components/features/Typing";
 import Link from "next/link";
@@ -30,17 +29,6 @@ export default function MyHome() {
           </Link>
         </div>
 
-
-
-          
-
-        {/* Section texte important */}
-        <div className="h-200">
-          <SectionProfile/>
-        </div>
-        <div className="">
-          <SectionProfile/>
-        </div>
     </ScrollArea>
   );
 }

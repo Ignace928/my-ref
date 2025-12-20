@@ -1,7 +1,6 @@
+import { motion } from 'framer-motion'
 import { BookmarkIcon } from "lucide-react"
 import { Toggle } from "../ui/toggle"
-import { Dialog } from "@radix-ui/react-dialog"
-
 
 export function ToggleDemo() {
   return (
@@ -14,5 +13,19 @@ export function ToggleDemo() {
       <BookmarkIcon />
       Bookmark
     </Toggle>
+  )
+}
+
+export function Animation() {
+  return(
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -50 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="  mb-8"
+    >
+      Blablablablab qmslkdjfmqlkdj
+    </motion.div>
   )
 }

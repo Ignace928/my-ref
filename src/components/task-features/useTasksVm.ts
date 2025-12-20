@@ -41,7 +41,9 @@ Après une mutation (createTask, updateTask, deleteTask), tu veux que la liste d
         onSuccess: () => queryClient.invalidateQueries({
             queryKey:["tasks", userId] as const
         }),
-        onError:(e) => toast.error(e.message)
+        onError:(e) => {
+            console.log(e)
+        }
     })
 
     return {

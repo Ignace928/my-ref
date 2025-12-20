@@ -8,7 +8,7 @@ export default function Page () {
     return(
         <div>
             <div className="sticky top-0 z-50">
-              <HeaderSidebar title="Dashboard"></HeaderSidebar>
+              <HeaderSidebar title="Playground"></HeaderSidebar>
             </div>
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                 <ContactForm/>
