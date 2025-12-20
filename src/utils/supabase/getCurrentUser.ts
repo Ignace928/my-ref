@@ -13,12 +13,9 @@ export async function getCurrentUser() {//Pour l'utilisation côté server avec 
 
   return prisma.user.upsert({
     where: { id: user.id },
-    update: {
-      email: user.email,
-    },
+    update: {},
     create: {
       id: user.id,
-      email: user.email,
     },
   });
 
